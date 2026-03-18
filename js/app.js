@@ -1,24 +1,41 @@
-function alterarStatus(id) {
- let gameClicado = document.getElementById(`game-${id}`);
- let imagem = gameClicado.querySelector('.dashboard__item__img'); 
- let botao = gameClicado.querySelector('.dashboard__item__button'); 
+let jogosAlugados = 0;
 
- console.log(alterarStatus);
- console.log(gameClicado);
- console.log(imagem);
- console.log(botao);
-
- if (imagem.classList.contains('dashboard__item__img--rented')) { 
-    imagem.classList.remove('dashboard__item__img--rented');
-    botao.classList.remove('dashboard__item__button--return');
-    botao.textContent = 'Alugar';
-    
-    console.log('O jogo foi devolvido.');
- } else { 
-    imagem.classList.add('dashboard__item__img--rented');
-    botao.textContent = 'Devolver';
-    botao.classList.add('dashboard__item__button--return');
-      console.log('O jogo foi alugado.');
- }
-
+function contarEExibirJogosAlugados() {
+    console.log(`Total de jogos alugados: ${jogosAlugados}`);
 }
+
+function alterarStatus(id) {
+    let gameClicado = document.getElementById(`game-${id}`);
+    let imagem = gameClicado.querySelector('.dashboard__item__img');
+    let botao = gameClicado.querySelector('.dashboard__item__button');
+    let nomeJogo = gameClicado.querySelector('.dashboard__item__name');
+
+    // SE já está alugado → devolução
+    if (imagem.classList.contains('dashboard__item__img--rented')) {
+
+        let confirmar = confirm(`Você tem certeza que deseja devolver o jogo ${nomeJogo.textContent}?`);
+
+        if (confirmar) {
+            imagem.classList.remove('dashboard__item__img--rented');
+            botao.classList.remove('dashboard__item__button--return');
+            botao.textContent = 'Alugar';
+            jogosAlugados--;
+        }
+
+    } 
+    // SENÃO → aluguel
+    else {
+        imagem.classList.add('dashboard__item__img--rented');
+        botao.classList.add('dashboard__item__button--return');
+        botao.textContent = 'Devolver';
+        jogosAlugados++;
+    }
+
+    contarEExibirJogosAlugados();
+}
+
+// Inicialização correta
+document.addEventListener('DOMContentLoaded', function() {
+    jogosAlugados = document.querySelectorAll('.dashboard__item__img--rented').length;
+    contarEExibirJogosAlugados();
+});
